@@ -71,12 +71,23 @@ class class_name:
         return sum_ab, sub_ab
 
 
-def filelists(path:str, wildcard:str = '*') -> list[Path]:
+def filelists(path:str, wildcard:str = '*') -> list:
+    """
+    @fn filelists()
+    @brief ファイルを再帰的に検索しリストに変換する 
+    @param path ファイルパス (str)
+    @param wildcard ワイルドカード (str)
+    @retval pathlist 検索済みのファイルパスリスト ()
+    @details 詳細な説明
+    @warning 見つからなかった場合はFileExistsErrorを発行
+    @note -
+    """
+    wildcard = '**/' +str(wildcard)
     p =  Path(path)
-    list = p.glob(wildcard)
-    if len(list) == 0:
-        raise FileNotFoundError('Path is NOT exist...')
-    return list
+    plist = list(p.glob(wildcard))
+    if len(plist) == 0:
+        raise FileExistsError("Path is NOT Exist")
+    return plist
 
 def main(argv:str):
     """
@@ -86,7 +97,20 @@ def main(argv:str):
     print("## START! Stand Alone Operation ##")
     test = class_name('abc')
 
-    print(filelists("file"))
+    try:
+        print(filelists("file"))
+    except:
+        print("not found...")
+    else:
+        print("next path")
+
+    try:
+        print(filelists("files","*.png"))
+    except:
+        print("not found...")
+    else:
+        pass
+
     
     print("## END! Stand Alone Operation ##")
 
