@@ -1,66 +1,38 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-"""
-@file ファイル名
-@version バージョン番号
-@author 作成者・更新者
-@date パッケージの作成日時・更新日時
-@brief 簡単な説明
-@details 詳細な説明
-@warning 警告メッセージ
-@note メモ
-"""
-
-"""
-@package パッケージの名前
-@version バージョン番号
-@author 作成者・更新者
-@date 作成日時・更新日時
-@brief 説明(簡単)
-@details 説明（詳細）
-@warning 警告メッセージ
-@note メモ
-"""
-
-# Standard module
-import sys
-import time
-# therd party module
 import pygame
-# my module
+from pygame.locals import *
 
+# ジョイスティックの初期化
+pygame.joystick.init()
+try:
+   # ジョイスティックインスタンスの生成
+   joystick = pygame.joystick.Joystick(0)
+   joystick.init()
+   print('ジョイスティックの名前:', joystick.get_name())
+   print('ボタン数 :', joystick.get_numbuttons())
+except pygame.error:
+   print('ジョイスティックが接続されていません')
 
-    
+# pygameの初期化
+pygame.init()
 
-def main(argv:str):
-    """
-    @fn main()
-    @brief モジュール単体実行時の実行関数
-    """
-    print("## START! Stand Alone Operation ##")
-    print("init pygame")
-    pygame.init()
+# 画面の生成
+screen = pygame.display.set_mode((320, 320))
 
-    joy = pygame.joystick.Joystick(0) 
-    joy.init()
-    try:
-        while True:
-            strg = joy.get_axis(0) 
-            accl = (joy.get_axis(5) + 1.0) / 2.0
-            brk = (joy.get_axis(2) + 1.0) / 2.0
-            print(f'{strg}:{accl}:{brk}')
-            time.sleep(0.1)
-    except(KeyboardInterrupt, SystemExit):
-        print("exit")
-    print("## END! Stand Alone Operation ##")
+# ループ
+active = True
+while active:
+   # イベントの取得
+   for e in pygame.event.get():
+       # 終了ボタン
+       if e.type == QUIT:
+           active = False
 
-if __name__ == '__main__':
-    
-    try:
-        main(sys.argv)
-    except Exception as e:
-        print("ERROR >> ", e)
-        sys.exit(1)
-    else:
-        sys.exit(0)
+       # ジョイスティックのボタンの入力
+       if e.type == pygame.locals.JOYAXISMOTION:
+           print('十時キー:', joystick.get_axis(0), joystick.get_axis(1))
+       elif e.type == pygame.locals.JOYBUTTONDOWN:
+           print('ボタン'+str(e.button)+'を押した')
+       elif e.type == pygame.locals.JOYBUTTONUP:
+           print('ボタン'+str(e.button)+'を離した')
