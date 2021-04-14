@@ -31,49 +31,9 @@ from typing import Final
 
 # my module
 
-GCONSTVAL:Final[int] = 3
-
-class class_name:
+def fdlist(path:str, wildcard:str = '*') -> list:
     """
-    @class class_name
-    @brief This is class brief
-    @details This is class discription
-    @warning 
-    """
-    classval:str
-    CCONSTVAL:Final[str] = "Python"
-    def __init__(self, arg:str) -> None:
-        """
-        @fn __init__()
-        @brief Class Init
-        @param arg
-        @detail This is Init
-        @warning Warning Message
-        @note memo
-        """
-        self.classval = arg
-    
-    def sumdiff(self, a:float, b:float) -> tuple:
-        """
-        @fn sumdiff()
-        @brief 2つの値の和と差を計算します
-        @param a 1つ目の値（float）
-        @param b 2つ目の値（float)
-        @retval sum_ab aとbの和（float）
-        @retval sub_ab aとbの差（float）
-        @details 詳細な説明
-        @warning 警告メッセージ
-        @note メモ
-        """
-
-        sum_ab = a+b
-        sub_ab = a-b
-        return sum_ab, sub_ab
-
-
-def filelists(path:str, wildcard:str = '*') -> list:
-    """
-    @fn filelists()
+    @fn fdlist()
     @brief ファイルを再帰的に検索しリストに変換する 
     @param path ファイルパス (str)
     @param wildcard ワイルドカード (str)
@@ -82,16 +42,17 @@ def filelists(path:str, wildcard:str = '*') -> list:
     @warning 見つからなかった場合はFileExistsErrorを発行
     @note -
     """
-    wildcard = '**/' +str(wildcard)
     p =  Path(path)
-    plist = list(p.glob(wildcard))
-    if len(plist) == 0:
+    if not p.exists():
         raise FileExistsError("Path is NOT Exist")
+
+    wildcard = '**/' +str(wildcard)
+    plist = list(p.glob(wildcard))
     return plist
 
-def dirlists(path:str) -> list:
+def filelist(path:str) -> list:
     """
-    @fn dirlists()
+    @fn filelist()
     @brief ファイルを再帰的に検索しリストに変換する 
     @param path ファイルパス (str)
     @param wildcard ワイルドカード (str)
@@ -101,9 +62,25 @@ def dirlists(path:str) -> list:
     @note -
     """
     p =  Path(path)
-    plist = list(p.glob("*"))
-    if len(plist) == 0:
+    if not p.exists():
         raise FileExistsError("Path is NOT Exist")
+
+    plist = [i for i in p.iterdir() if i.is_file()]
+    return plist
+
+def dirlist(path:str) -> list:
+    """
+    @fn dirlist()
+    @brief ファイルを再帰的に検索しリストに変換する 
+    @param path ファイルパス (str)
+    @param wildcard ワイルドカード (str)
+    @retval pathlist 検索済みのファイルパスリスト ()
+    @details 詳細な説明
+    @warning 見つからなかった場合はFileExistsErrorを発行
+    @note -
+    """
+    p =  Path(path)
+    plist = [i for i in p.iterdir() if i.is_dir()]
     return plist
 
 def main(argv:str):
@@ -112,29 +89,42 @@ def main(argv:str):
     @brief モジュール単体実行時の実行関数
     """
     print("## START! Stand Alone Operation ##")
-    test = class_name('abc')
 
     try:
-        print(dirlists("files"))
-    except:
-        print("not found...")
-    else:
-        print("next path")
-
-    try:
-        print(filelists("file"))
-    except:
-        print("not found...")
-    else:
-        print("next path")
-
-    try:
-        print(filelists("files","*.png"))
+        print(filelist("nothing"))
     except:
         print("not found...")
     else:
         pass
+    finally:
+        print("next")
 
+    try:
+        print(dirlist("files"))
+    except:
+        print("not found...")
+    else:
+        pass
+    finally:
+        print("next")
+
+    try:
+        print(filelist("files/src"))
+    except:
+        print("not found...")
+    else:
+        pass
+    finally:
+        print("next")
+
+    try:
+        print(fdlist("files","*.png"))
+    except:
+        print("not found...")
+    else:
+        pass
+    finally:
+        print("next")
     
     print("## END! Stand Alone Operation ##")
 
