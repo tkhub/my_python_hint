@@ -89,6 +89,23 @@ def filelists(path:str, wildcard:str = '*') -> list:
         raise FileExistsError("Path is NOT Exist")
     return plist
 
+def dirlists(path:str) -> list:
+    """
+    @fn dirlists()
+    @brief ファイルを再帰的に検索しリストに変換する 
+    @param path ファイルパス (str)
+    @param wildcard ワイルドカード (str)
+    @retval pathlist 検索済みのファイルパスリスト ()
+    @details 詳細な説明
+    @warning 見つからなかった場合はFileExistsErrorを発行
+    @note -
+    """
+    p =  Path(path)
+    plist = list(p.glob("*"))
+    if len(plist) == 0:
+        raise FileExistsError("Path is NOT Exist")
+    return plist
+
 def main(argv:str):
     """
     @fn main()
@@ -96,6 +113,13 @@ def main(argv:str):
     """
     print("## START! Stand Alone Operation ##")
     test = class_name('abc')
+
+    try:
+        print(dirlists("files"))
+    except:
+        print("not found...")
+    else:
+        print("next path")
 
     try:
         print(filelists("file"))
