@@ -44,7 +44,7 @@ def fdlist(path:str, wildcard:str = '*') -> list:
     """
     p =  Path(path)
     if not p.exists():
-        raise FileExistsError("Path is NOT Exist")
+        raise FileNotFoundError("Path is NOT Exist")
 
     wildcard = '**/' +str(wildcard)
     plist = list(p.glob(wildcard))
@@ -63,7 +63,7 @@ def filelist(path:str) -> list:
     """
     p =  Path(path)
     if not p.exists():
-        raise FileExistsError("Path is NOT Exist")
+        raise FileNotFoundError("Path is NOT Exist")
 
     plist = [i for i in p.iterdir() if i.is_file()]
     return plist
